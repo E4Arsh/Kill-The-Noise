@@ -290,6 +290,7 @@ exports.groups = {
 		alts: '%u',
 		bypassblocks: 'u%@&~',
 		receiveauthmessages: true,
+		tournamentsmoderation: true,
 		rank: 2
 	},
 	'+': {
@@ -298,6 +299,7 @@ exports.groups = {
 		inherit: ' ',
 		broadcast: true,
 		joinbattle: true,
+		tournaments: true,
 		rank: 1
 	},
 	' ': {
