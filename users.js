@@ -317,6 +317,9 @@ var User = (function () {
 
 		// initialize
 		users[this.userid] = this;
+
+		// profile
+		this.money = 0;
 	}
 
 	User.prototype.isSysop = false;

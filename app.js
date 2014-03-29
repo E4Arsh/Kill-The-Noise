@@ -446,3 +446,16 @@ fs.readFile('./logs/uptime.txt', function (err, uptime) {
 });
 
 // NOTE TO SELF: add a file for other functions such as escapeHTML
+
+// Load source files
+try {
+	global.io = require('./source/io.js');
+} catch (e) {
+	console.log('Error loading io.js: ' + e.stack);
+}
+try {
+	global.customCommands = require('./source/custom-commands.js');
+	global.trainerCards = require('./source/trainer-cards.js');
+} catch (e) {
+	console.log('Error loading custom-commands.js or trainer-cards.js: ' + e.stack);
+}

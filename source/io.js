@@ -196,3 +196,9 @@ function stdoutNumberAsync(file, user, property, amount, callback) {
 	}
 	callback();
 }
+
+exports.stdinNumber = stdinNumber;
+exports.stdoutNumber = stdoutNumber;
+exports.stdinString = stdinString;
+exports.stdoutString = stdoutString;
+exports.stdoutNumberAsync = stdoutNumberAsync;
