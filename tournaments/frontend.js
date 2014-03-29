@@ -560,6 +560,33 @@ var Tournament = (function () {
 	};
 	Tournament.prototype.onTournamentEnd = function () {
 		this.room.add('|tournament|end|' + JSON.stringify({results: this.generator.getResults().map(usersToNames), bracketData: this.getBracketData()}));
+		data = {results: this.generator.getResults().map(usersToNames), bracketData: this.getBracketData()};
+		data = data['results'].toString();
+		runnerUp = false;
+		if (data.indexOf(',') >= 0) { 
+			data = data.split(',');
+			winner = data[0];
+			if (data[1]) runnerUp = data[1];
+		} else {
+			winner = data;
+		}
+		tourSize = this.generator.users.size;
+		if (this.room.isOfficial && tourSize >= 8) {
+			firstMoney = Math.round(tourSize/10);
+			secondMoney = Math.round(firstMoney/2);
+			firstBuck = 'buck';
+			secondBuck = 'buck';
+			if (firstMoney > 1) firstBuck = 'bucks';
+			if (secondMoney > 1) secondBuck = 'bucks';
+			this.room.add('|raw|<b><font color=#24678d>'+escapeHTML(winner)+'</font> has also won <font color=#24678d>'+firstMoney+'</font> '+firstBuck+' for winning the tournament!</b>');
+			if (runnerUp) this.room.add('|raw|<b><font color=#24678d>'+escapeHTML(runnerUp)+'</font> has also won <font color=#24678d>'+secondMoney+'</font> '+secondBuck+' for winning the tournament!</b>');
+			io.stdoutNumberAsync('db/money.csv', winner, 'money', firstMoney, function(){
+				if (runnerUp) {
+					io.stdoutNumber('db/money.csv', runnerUp, 'money', secondMoney);
+				}
+			});
+		}
+		addTourWin(winner,this.format);
 		delete exports.tournaments[toId(this.room.id)];
 	};
 

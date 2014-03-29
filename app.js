@@ -444,3 +444,5 @@ fs.readFile('./logs/uptime.txt', function (err, uptime) {
 		fs.writeFile('./logs/uptime.txt', global.uptimeRecord.toFixed(0));
 	}, (1).hour());
 });
+
+// NOTE TO SELF: add a file for other functions such as escapeHTML
