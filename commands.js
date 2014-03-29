@@ -915,12 +915,13 @@ var commands = exports.commands = {
 	},
 
 	modlog: function(target, room, user, connection) {
+		if (!this.can('modlog')) return false;
 		var lines = 0;
 		// Specific case for modlog command. Room can be indicated with a comma, lines go after the comma.
 		// Otherwise, the text is defaulted to text search in current room's modlog.
 		var roomId = room.id;
 		var roomLogs = {};
-
+		var fs = require('fs');
 		if (target.indexOf(',') > -1) {
 			var targets = target.split(',');
 			target = targets[1].trim();
@@ -939,7 +940,6 @@ var commands = exports.commands = {
 		var filename = '';
 		var command = '';
 		if (roomId === 'all' && wordSearch) {
-			if (!this.can('modlog')) return;
 			roomNames = 'all rooms';
 			// Get a list of all the rooms
 			var fileList = fs.readdirSync('logs/modlog');
@@ -947,7 +947,7 @@ var commands = exports.commands = {
 				filename += 'logs/modlog/' + fileList[i] + ' ';
 			}
 		} else {
-			if (!this.can('modlog', null, Rooms.get(roomId))) return;
+			roomId = room.id;
 			roomNames = 'the room ' + roomId;
 			filename = 'logs/modlog/modlog_' + roomId + '.txt';
 		}
@@ -1020,36 +1020,19 @@ var commands = exports.commands = {
 			try {
 				CommandParser.uncacheTree('./command-parser.js');
 				CommandParser = require('./command-parser.js');
-
-				var runningTournaments = Tournaments.tournaments;
-				CommandParser.uncacheTree('./tournaments/frontend.js');
-				Tournaments = require('./tournaments/frontend.js');
-				Tournaments.tournaments = runningTournaments;
-
 				return this.sendReply('Chat commands have been hot-patched.');
 			} catch (e) {
 				return this.sendReply('Something failed while trying to hotpatch chat: \n' + e.stack);
 			}
 
-		} else if (target === 'tournaments') {
-
-			try {
-				var runningTournaments = Tournaments.tournaments;
-				CommandParser.uncacheTree('./tournaments/frontend.js');
-				Tournaments = require('./tournaments/frontend.js');
-				Tournaments.tournaments = runningTournaments;
-				return this.sendReply("Tournaments have been hot-patched.");
-			} catch (e) {
-				return this.sendReply('Something failed while trying to hotpatch tournaments: \n' + e.stack);
-			}
-
 		} else if (target === 'battles') {
 
-			Simulator.SimulatorProcess.respawn();
-			return this.sendReply('Battles have been hotpatched. Any battles started after now will use the new code; however, in-progress battles will continue to use the old code.');
+			/*Simulator.SimulatorProcess.respawn();
+			return this.sendReply('Battles have been hotpatched. Any battles started after now will use the new code; however, in-progress battles will continue to use the old code.');*/
+			return this.sendReply('Battle hotpatching is not supported with the single process hack.');
 
 		} else if (target === 'formats') {
-			try {
+			/*try {
 				// uncache the tools.js dependency tree
 				CommandParser.uncacheTree('./tools.js');
 				// reload tools.js
@@ -1066,7 +1049,8 @@ var commands = exports.commands = {
 				return this.sendReply('Formats have been hotpatched.');
 			} catch (e) {
 				return this.sendReply('Something failed while trying to hotpatch formats: \n' + e.stack);
-			}
+			}*/
+			return this.sendReply('Formats hotpatching is not supported with the single process hack.');
 
 		} else if (target === 'learnsets') {
 			try {
@@ -1177,9 +1161,9 @@ var commands = exports.commands = {
 			return this.sendReply('Wait for /updateserver to finish before using /kill.');
 		}
 
-		for (var i in Sockets.workers) {
+		/*for (var i in Sockets.workers) {
 			Sockets.workers[i].kill();
-		}
+		}*/
 
 		if (!room.destroyLog) {
 			process.exit();
@@ -1248,7 +1232,7 @@ var commands = exports.commands = {
 			if (error) {
 				if (error.code === 1) {
 					// The working directory or index have local changes.
-					cmd = 'git stash && ' + cmd + ' && git stash pop';
+					cmd = 'git stash;' + cmd + ';git stash pop';
 				} else {
 					// The most likely case here is that the user does not have
 					// `git` on the PATH (which would be error.code === 127).
