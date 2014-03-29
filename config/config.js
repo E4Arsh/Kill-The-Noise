@@ -1,10 +1,10 @@
 // The server port - the port to run Pokemon Showdown under
-exports.port = 4000;
+exports.port = 8000;
 
 // The server id - the id specified in the server registration.
 //   This should be set properly especially when there are more than one
 //   pokemon showdown server running from the same IP
-exports.serverId = 'spectrum';
+exports.serverId = 'killthenoise';
 
 // proxyip - proxy IPs with trusted X-Forwarded-For headers
 //   This can be either false (meaning not to trust any proxies) or an array
@@ -144,9 +144,6 @@ exports.herokuhack = false;
 // displayed in the client.
 exports.customavatars = {
 	//'userid': 'customavatar.png'
-<<<<<<< HEAD
-	
-=======
 	'blakjack': 'blakjack.png',
 	'creaturephil': 'birkal.gif',
 	'10messi': '10messi.gif',
@@ -170,7 +167,7 @@ exports.customavatars = {
 	'unovachampionn': 'ucn.gif',
 	'soraypusef': 'yousef.gif',
 	'zarif': 'zarif.png',
->>>>>>> af13c3cf6dc98161563f941adc08a276e4779581
+
 };
 
 // appealurl - specify a URL containing information on how users can appeal
