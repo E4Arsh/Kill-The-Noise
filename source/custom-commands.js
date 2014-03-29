@@ -34,7 +34,7 @@ var customCommands = {
 	        p = 'buck';
 	    }
 	    io.stdoutNumber('db/money.csv', user, 'money', giveMoney);
-	    this.sendReply(targetUser.name + ' was given ' + giveMoney + ' ' + p + '. This user now has ' + targetUser.money + ' pokedollars.');
+	    this.sendReply(targetUser.name + ' was given ' + giveMoney + ' ' + p + '. This user now has ' + targetUser.money + ' ' + p + '.');
 	    targetUser.send(user.name + ' has given you ' + giveMoney + ' ' + p + '.');
 	    fs.appendFile('logs/transactions.log', '\n' + Date() + ': ' + targetUser.name + ' was given ' + giveMoney + ' ' + p + ' from ' + user.name + '. ' + 'They now have ' + targetUser.money + ' ' + p + '.');
 	},
@@ -101,9 +101,11 @@ var customCommands = {
 	    if (transferMoney === 1) {
 	        p = 'buck';
 	    }
-	    io.stdoutNumberAsync('db/money.csv', user, 'money', -transferMoney, function() {
+	    io.stdoutNumber('db/money.csv', user, 'money', -transferMoney);
+	    setTimeout(function() {
 	    	io.stdoutNumber('db/money.csv', targetUser, 'money', transferMoney);
-	    });
+	    	fs.appendFile('logs/transactions.log','\n'+Date()+': '+user.name+' has transferred '+transferMoney+' '+p+' to ' + targetUser.name + '. ' +  user.name +' now has '+user.money + ' ' + p + ' and ' + targetUser.name + ' now has ' + targetUser.money +' ' + p +'.');
+	    }, 1000);
 	    this.sendReply('You have successfully transferred ' + transferMoney + ' to ' + targetUser.name + '. You now have ' + user.money + ' ' + p + '.');
 	    targetUser.send(user.name + ' has transferred ' + transferMoney + ' ' + p + ' to you.');
 	},

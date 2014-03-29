@@ -154,51 +154,7 @@ function stdoutString(file, user, property, info) {
 	}
 }
 
-/*
- * Asynchronous version of stdoutNumber function.
- *
- */
-function stdoutNumberAsync(file, user, property, amount, callback) {
-	var data = fs.readFileSync('config/'+file,'utf8');
-	var match = false;
-	var info = 0;
-	var row = (''+data).split("\n");
-	var line = '';
-	for (var i = row.length; i > -1; i--) {
-		if (!row[i]) continue;
-		var parts = row[i].split(",");
-		var userid = toUserid(parts[0]);
-		if (user.userid === userid) {
-			info = Number(parts[1]);
-			match = true;
-			if (match === true) {
-				line = line + row[i];
-				break;
-			}
-		}
-	}
-	var total = info + amount;
-	Object.defineProperty(user, property, { value : total, writable : true });
-	if (match === true) {
-		var re = new RegExp(line,"g");
-		fs.readFile('config/'+file, 'utf8', function(err, data) {
-		if (err) {
-			return console.log(err);
-		}
-		var result = data.replace(re, user.userid+','+total);
-		fs.writeFile('config/'+file, result, 'utf8', function(err) {
-			if (err) return console.log(err);
-		});
-		});
-	} else {
-		var log = fs.createWriteStream('config/'+file, {'flags': 'a'});
-		log.write("\n"+user.userid+','+total);
-	}
-	callback();
-}
-
 exports.stdinNumber = stdinNumber;
 exports.stdoutNumber = stdoutNumber;
 exports.stdinString = stdinString;
 exports.stdoutString = stdoutString;
-exports.stdoutNumberAsync = stdoutNumberAsync;

@@ -578,15 +578,16 @@ var Tournament = (function () {
 			secondBuck = 'buck';
 			if (firstMoney > 1) firstBuck = 'bucks';
 			if (secondMoney > 1) secondBuck = 'bucks';
-			this.room.add('|raw|<b><font color=#24678d>'+escapeHTML(winner)+'</font> has also won <font color=#24678d>'+firstMoney+'</font> '+firstBuck+' for winning the tournament!</b>');
-			if (runnerUp) this.room.add('|raw|<b><font color=#24678d>'+escapeHTML(runnerUp)+'</font> has also won <font color=#24678d>'+secondMoney+'</font> '+secondBuck+' for winning the tournament!</b>');
-			io.stdoutNumberAsync('db/money.csv', winner, 'money', firstMoney, function(){
-				if (runnerUp) {
+			this.room.add('|raw|<b><font color=#24678d>'+utilities.escapeHTML(winner)+'</font> has also won <font color=#24678d>'+firstMoney+'</font> '+firstBuck+' for winning the tournament!</b>');
+			if (runnerUp) this.room.add('|raw|<b><font color=#24678d>'+utilities.escapeHTML(runnerUp)+'</font> has also won <font color=#24678d>'+secondMoney+'</font> '+secondBuck+' for winning the tournament!</b>');
+			io.stdoutNumber('db/money.csv', winner, 'money', firstMoney);
+			if (runnerUp) {
+				setTimeout(function() {
 					io.stdoutNumber('db/money.csv', runnerUp, 'money', secondMoney);
-				}
-			});
+				}, 1000);
+			}
+			io.stdoutNumber('db/tourWins.csv', winner, 'tourWins', 1);
 		}
-		addTourWin(winner,this.format);
 		delete exports.tournaments[toId(this.room.id)];
 	};
 

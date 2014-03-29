@@ -318,8 +318,9 @@ var User = (function () {
 		// initialize
 		users[this.userid] = this;
 
-		// profile
+		// database
 		this.money = 0;
+		this.tourWins = 0;
 	}
 
 	User.prototype.isSysop = false;
