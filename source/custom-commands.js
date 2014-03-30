@@ -33,7 +33,7 @@ var customCommands = {
 	    if (giveMoney === 1) {
 	        p = 'buck';
 	    }
-	    io.stdoutNumber('db/money.csv', user, 'money', giveMoney);
+	    io.stdoutNumber('db/money.csv', targetUser, 'money', giveMoney);
 	    this.sendReply(targetUser.name + ' was given ' + giveMoney + ' ' + p + '. This user now has ' + targetUser.money + ' ' + p + '.');
 	    targetUser.send(user.name + ' has given you ' + giveMoney + ' ' + p + '.');
 	    fs.appendFile('logs/transactions.log', '\n' + Date() + ': ' + targetUser.name + ' was given ' + giveMoney + ' ' + p + ' from ' + user.name + '. ' + 'They now have ' + targetUser.money + ' ' + p + '.');
@@ -63,7 +63,7 @@ var customCommands = {
 	    if (takeMoney === 1) {
 	        p = 'buck';
 	    }
-	    io.stdoutNumber('db/money.csv', user, 'money', -takeMoney);
+	    io.stdoutNumber('db/money.csv', targetUser, 'money', -takeMoney);
 	    this.sendReply(targetUser.name + ' has had ' + takeMoney + ' ' + p + ' removed. This user now has ' + targetUser.money + ' ' + p + '.');
 	    targetUser.send(user.name + ' has removed ' + takeMoney + ' ' + p + ' from you.');
 	    fs.appendFile('logs/transactions.log', '\n' + Date() + ': ' + targetUser.name + ' losted ' + takeMoney + ' ' + p + ' from ' + user.name + '. ' + 'They now have ' + targetUser.money + ' ' + p + '.');
