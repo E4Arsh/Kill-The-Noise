@@ -1,0 +1,1 @@
+This is where the files are kept on user's data. Thus the named db which stand for database.
