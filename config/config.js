@@ -144,6 +144,30 @@ exports.herokuhack = false;
 // displayed in the client.
 exports.customavatars = {
 	//'userid': 'customavatar.png'
+	'blakjack': 'blakjack.png',
+	'creaturephil': 'birkal.gif',
+	'10messi': '10messi.gif',
+	'achampaero': 'achampaero.gif',
+	'creatoraero': 'achampaero.gif',
+	'aeliteaknolan': 'aknolan.jpg',
+	'arjunb': 'arjunb.gif',
+	'ionstine': 'astre.png',
+	'avada': 'avada.gif',
+	'boo118': 'boo118.gif',
+	'whymegaluke': 'boo118.gif',
+	'calvinz': 'calvinz.png',
+	'champinnyxe': 'championonyxe.png',
+	'championcorper': 'championcorper.gif',
+	'e4arsh': 'e4arsh.gif',
+	'jackdaw': 'jackdaw.gif',
+	'ncrypt': 'ncrypt.gif',
+	'championphoton': 'photon.gif',
+	'skarr': 'skarr.gif',
+	'sooperpooper': 'sooperpooper.gif',
+	'unovachampionn': 'ucn.gif',
+	'soraypusef': 'yousef.gif',
+	'zarif': 'zarif.png',
+
 };
 
 // appealurl - specify a URL containing information on how users can appeal
