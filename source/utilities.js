@@ -91,6 +91,10 @@
 		var arr = list.filter( function( el ) {
    			 return !!~el.indexOf(toUserid(user));
 		});
-		return 'Rank <b>' + list.indexOf(arr[0]) + '</b> out of ' + list.length;
+		if (list.indexOf(arr[0]) === -1) {
+			return 'Not Ranked';
+		} else {
+			return 'Rank <b>' + (list.indexOf(arr[0])+1) + '</b> out of ' + list.length;
+		}
 	}
 };
