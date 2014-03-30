@@ -74,7 +74,7 @@ var cmds = {
 
 	    if (!targetUser) return this.sendReply('User ' + this.targetUsername + ' not found.');
 
-	    var height = 70;
+	    var height = 75;
 
 	    io.stdoutNumber('db/views.csv', user, 'views', 1);
 
@@ -83,7 +83,7 @@ var cmds = {
 	    if (!targetUser.authenticated) {
 	        display = Profile.avatar(targetUser, height) + Profile.unregisteredName(targetUser) + Profile.views(targetUser) + '<hr>' + Profile.rank(targetUser) + Profile.tier(targetUser) + Profile.money(targetUser) + Profile.tourWins(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
 	        return this.sendReplyBox(display);
-	    } else if (typeof (targetUser.avatar) === typeof ('')) { //checks for custom avatar
+	    } else if (typeof (targetUser.avatar) === typeof ('')) {
 	        display = Profile.customAvatar(targetUser, height) + Profile.name(targetUser) + Profile.views(targetUser) + '<hr>' + Profile.rank(targetUser) + Profile.tier(targetUser) + Profile.money(targetUser) + Profile.tourWins(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
 	        return this.sendReplyBox(display);
 	    } else {
