@@ -61,4 +61,36 @@
 
 	    return 'rgb(' + r + ', ' + g + ', ' + b + ');';
 	},
+
+	formatAMPM: function(date) {
+		var hours = date.getHours();
+		var minutes = date.getMinutes();
+		var ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12; // the hour '0' should be '12'
+		minutes = minutes < 10 ? '0'+minutes : minutes;
+		var strTime = hours + ':' + minutes + ' ' + ampm;
+		return strTime;
+	},
+
+	rank: function(user){
+		var data = fs.readFileSync('config/db/tourWins.csv','utf8');
+		var row = (''+data).split("\n");
+
+		var list = [];
+
+		for (var i = row.length; i > -1; i--) {
+			if (!row[i]) continue;
+			var parts = row[i].split(",");
+			list.push([toUserid(parts[0]),Number(parts[1])]);
+		}
+		list.pop();
+		list.sort(function(a,b){
+    		return a[1] - b[1];
+		});
+		var arr = list.filter( function( el ) {
+   			 return !!~el.indexOf(toUserid(user));
+		});
+		return 'Rank <b>' + list.indexOf(arr[0]) + '</b> out of ' + list.length;
+	}
 };

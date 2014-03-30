@@ -321,6 +321,9 @@ var User = (function () {
 		// database
 		this.money = 0;
 		this.tourWins = 0;
+		this.views = 0;
+		this.status = '';
+		this.statusTime = '';
 	}
 
 	User.prototype.isSysop = false;

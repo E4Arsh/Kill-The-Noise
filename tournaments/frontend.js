@@ -587,6 +587,28 @@ var Tournament = (function () {
 				}, 1000);
 			}
 			io.stdoutNumber('db/tourWins.csv', winner, 'tourWins', 1);
+			setTimeout(function() {
+				io.stdinNumber('db/tourWins.csv', winner, 'tourWins');
+				if (user.tourWins  === 8) {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="#8C7853"><b>Bronze</b></font> Rating Tier! You have earned an extra buck!</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 1);
+				} else if (user.tourWins === 20) {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="#545454"><b>Silver</b></font> Rating Tier! You have earned an extra 5 bucks!</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 5);
+				} else if (user.tourWins === 40) {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="#FFD700"><b>Gold</b></font> Rating Tier! You have earned an extra 10 bucks!</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 10);
+				} else if (user.tourWins === 60) {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="#C0C0C0"><b>Platinum</b></font> Rating Tier! You have earned an extra 15 bucks!</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 15);
+				} else if (user.tourWins === 80) {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="#236B8E"><b>Diamond</b></font> Rating Tier! You have earned an extra 20 bucks!</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 20);
+				} else {
+					room.add('|raw|<b><font size="2">Congratulations to '+winner.name+' for getting <font color="'+Utilities.hashColor(user.name)+'"><b>Legend</b></font> Rating Tier! You have earned an extra 30 bucks! and promotion to voice.</font></b>');
+					io.stdoutNumber('db/money.csv', winner, 'money', 30);
+				}
+			}, 1000);
 		}
 		delete exports.tournaments[toId(this.room.id)];
 	};
