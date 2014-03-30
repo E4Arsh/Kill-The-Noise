@@ -4,7 +4,7 @@ var Profile = {
 	},
 
 	customAvatar: function (user, height) {
-	    return '<img src="http://71.92.60.231:5000/avatars/' + user.avatar + '" align="left" height="' + height + '"><br/>';
+	    return '<img src="http://192.184.93.98:8000/avatars/' + user.avatar + '" align="left" height="' + height + '"><br/>';
 	},
 
 	name: function (user) {
@@ -79,16 +79,16 @@ var cmds = {
 	    io.stdoutNumber('db/views.csv', user, 'views', 1);
 
 	    var display = Profile.avatar(targetUser, height) + Profile.name(targetUser) + Profile.views(targetUser) + '<hr>' + Profile.rank(targetUser) + Profile.tier(targetUser) + Profile.money(targetUser) + Profile.tourWins(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
-	    return this.sendReplyBox(display);
-	    /*if (!targetUser.authenticated) {
-	        display = Profile.avatar(targetUser, height) + Profile.unregisteredName(targetUser) + '<hr>' + Profile.group(config, targetUser) + Profile.views(targetUser) + Profile.location(targetUser) + Profile.money(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
+	  
+	    if (!targetUser.authenticated) {
+	        display = Profile.avatar(targetUser, height) + Profile.unregisteredName(targetUser) + Profile.views(targetUser) + '<hr>' + Profile.rank(targetUser) + Profile.tier(targetUser) + Profile.money(targetUser) + Profile.tourWins(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
 	        return this.sendReplyBox(display);
-	    /*} else if (typeof (targetUser.avatar) === typeof ('')) { //checks for custom avatar
-	        display = Profile.customAvatar(targetUser, height) + Profile.name(targetUser) + '<hr>' + Profile.group(config, targetUser) + Profile.views(targetUser) + Profile.location(targetUser) + Profile.money(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
+	    } else if (typeof (targetUser.avatar) === typeof ('')) { //checks for custom avatar
+	        display = Profile.customAvatar(targetUser, height) + Profile.name(targetUser) + Profile.views(targetUser) + '<hr>' + Profile.rank(targetUser) + Profile.tier(targetUser) + Profile.money(targetUser) + Profile.tourWins(targetUser) + Profile.status(targetUser) + Profile.statusTime(targetUser);
 	        return this.sendReplyBox(display);
 	    } else {
 	        return this.sendReplyBox(display);
-	    }*/
+	    }
 	},
 
 	setstatus: 'status',
