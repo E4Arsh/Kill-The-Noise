@@ -19,10 +19,10 @@ if (!('existsSync' in fs)) {
 }
 global.config = require('./config/config.js');
 
-/*if (config.crashguard) {
+if (config.crashguard) {
 	// graceful crash - allow current battles to finish before restarting
 	process.on('uncaughtException', function (err) {
-		require('./crashlogger.js')(err, 'A simulator process');*/
+		require('./crashlogger.js')(err, 'A simulator process');
 		/* var stack = (""+err.stack).split("\n").slice(0,2).join("<br />");
 		if (Rooms.lobby) {
 			Rooms.lobby.addRaw('<div><b>THE SERVER HAS CRASHED:</b> '+stack+'<br />Please restart the server.</div>');
@@ -30,8 +30,8 @@ global.config = require('./config/config.js');
 		}
 		config.modchat = 'crash';
 		Rooms.global.lockdown = true; */
-	/*});
-}*/
+	});
+}
 
 /**
  * Converts anything to an ID. An ID must have only lowercase alphanumeric
@@ -99,7 +99,7 @@ var Battles = {};
 
 // Receive and process a message sent using Simulator.prototype.send in
 // another process.
-battleEngineFakeProcess.client.on('message', function(message) {
+process.on('message', function(message) {
 	//console.log('CHILD MESSAGE RECV: "'+message+'"');
 	var nlIndex = message.indexOf("\n");
 	var more = '';
@@ -120,9 +120,9 @@ battleEngineFakeProcess.client.on('message', function(message) {
 
 				if (!require('./crashlogger.js')(fakeErr, 'A battle')) {
 					var ministack = (""+err.stack).split("\n").slice(0,2).join("<br />");
-					battleEngineFakeProcess.client.send(data[0]+'\nupdate\n|html|<div class="broadcast-red"><b>A BATTLE PROCESS HAS CRASHED:</b> '+ministack+'</div>');
+					process.send(data[0]+'\nupdate\n|html|<div class="broadcast-red"><b>A BATTLE PROCESS HAS CRASHED:</b> '+ministack+'</div>');
 				} else {
-					battleEngineFakeProcess.client.send(data[0]+'\nupdate\n|html|<div class="broadcast-red"><b>The battle crashed!</b><br />Don\'t worry, we\'re working on fixing it.</div>');
+					process.send(data[0]+'\nupdate\n|html|<div class="broadcast-red"><b>The battle crashed!</b><br />Don\'t worry, we\'re working on fixing it.</div>');
 				}
 			}
 		}
@@ -201,6 +201,7 @@ var BattlePokemon = (function() {
 		this.gender = this.template.gender || genders[set.gender] || (Math.random()*2<1?'M':'F');
 		if (this.gender === 'N') this.gender = '';
 		this.happiness = typeof set.happiness === 'number' ? clampIntRange(set.happiness, 0, 255) : 255;
+		this.pokeball = this.set.pokeball || 'pokeball';
 
 		this.fullname = this.side.id + ': ' + this.name;
 		this.details = this.species + (this.level==100?'':', L'+this.level) + (this.gender===''?'':', '+this.gender) + (this.set.shiny?', shiny':'');
@@ -948,6 +949,7 @@ var BattlePokemon = (function() {
 			this.itemData = {id: '', target: this};
 			this.usedItemThisTurn = true;
 			this.ateBerry = true;
+			this.battle.runEvent('AfterUseItem', this, null, null, item);
 			return true;
 		}
 		return false;
@@ -1265,6 +1267,7 @@ var BattleSide = (function() {
 				}),
 				baseAbility: pokemon.baseAbility,
 				item: pokemon.item,
+				pokeball: pokemon.pokeball,
 				canMegaEvo: pokemon.canMegaEvo
 			});
 		}
@@ -2400,6 +2403,9 @@ var Battle = (function() {
 		}
 		this.add('switch', pokemon, pokemon.getDetails);
 		if (pokemon.template.isMega) this.add('-formechange', pokemon, pokemon.template.species);
+		if (pokemon.illusion && pokemon.illusion.template.isMega) {
+			this.add('-formechange', pokemon.illusion, pokemon.illusion.template.species);
+		}
 		pokemon.update();
 		this.runEvent('SwitchIn', pokemon);
 		this.addQueue({pokemon: pokemon, choice: 'runSwitch'});
@@ -2458,6 +2464,9 @@ var Battle = (function() {
 		}
 		this.add('drag', pokemon, pokemon.getDetails);
 		if (pokemon.template.isMega) this.add('-formechange', pokemon, pokemon.template.species);
+		if (pokemon.illusion && pokemon.illusion.template.isMega) {
+			this.add('-formechange', pokemon.illusion, pokemon.illusion.template.species);
+		}
 		pokemon.update();
 		this.runEvent('SwitchIn', pokemon);
 		this.addQueue({pokemon: pokemon, choice: 'runSwitch'});
@@ -3766,7 +3775,7 @@ var Battle = (function() {
 	// Simulator.prototype.receive in simulator.js (in another process).
 	Battle.prototype.send = function(type, data) {
 		if (Array.isArray(data)) data = data.join("\n");
-		battleEngineFakeProcess.client.send(this.id+"\n"+type+"\n"+data);
+		process.send(this.id+"\n"+type+"\n"+data);
 	};
 	// This function is called by this process's 'message' event.
 	Battle.prototype.receive = function(data, more) {
@@ -3859,6 +3868,7 @@ var Battle = (function() {
 					};
 					this.send('log', JSON.stringify(log));
 				}
+				this.send('score', [this.p1.pokemonLeft, this.p2.pokemonLeft]);
 				this.send('winupdate', [this.winner].concat(this.log.slice(logPos)));
 			} else {
 				this.send('update', this.log.slice(logPos));

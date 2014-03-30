@@ -15,8 +15,7 @@ var simulators = {};
 
 var SimulatorProcess = (function() {
 	function SimulatorProcess() {
-		global.battleEngineFakeProcess = new (require('./fake-process').FakeProcess)();
-		this.process = battleEngineFakeProcess.server; //require('child_process').fork('battle-engine.js');
+		this.process = require('child_process').fork('battle-engine.js');
 		this.process.on('message', function(message) {
 			var lines = message.split('\n');
 			var sim = simulators[lines[0]];
@@ -25,23 +24,22 @@ var SimulatorProcess = (function() {
 			}
 		});
 		this.send = this.process.send.bind(this.process);
-		setImmediate(require.bind(global, './battle-engine'));
 	}
 	SimulatorProcess.prototype.load = 0;
 	SimulatorProcess.prototype.active = true;
 	SimulatorProcess.processes = [];
 	SimulatorProcess.spawn = function() {
-		/*var num = config.simulatorprocesses || 1;
+		var num = config.simulatorprocesses || 1;
 		for (var i = 0; i < num; ++i) {
 			this.processes.push(new SimulatorProcess());
-		}*/
+		}
 	};
 	SimulatorProcess.respawn = function() {
-		/*this.processes.splice(0).forEach(function(process) {
+		this.processes.splice(0).forEach(function(process) {
 			process.active = false;
 			if (!process.load) process.process.disconnect();
 		});
-		this.spawn();*/
+		this.spawn();
 	};
 	SimulatorProcess.acquire = function() {
 		var process = this.processes[0];
@@ -55,9 +53,9 @@ var SimulatorProcess = (function() {
 	};
 	SimulatorProcess.release = function(process) {
 		--process.load;
-		/*if (!process.load && !process.active) {
+		if (!process.load && !process.active) {
 			process.process.disconnect();
-		}*/
+		}
 	};
 	SimulatorProcess.eval = function(code) {
 		this.processes.forEach(function(process) {
@@ -68,8 +66,7 @@ var SimulatorProcess = (function() {
 })();
 
 // Create the initial set of simulator processes.
-//SimulatorProcess.spawn();
-SimulatorProcess.processes.push(new SimulatorProcess());
+SimulatorProcess.spawn();
 
 var slice = Array.prototype.slice;
 
@@ -188,6 +185,10 @@ var Simulator = (function(){
 
 		case 'inactiveside':
 			this.inactiveSide = parseInt(lines[2], 10);
+			break;
+
+		case 'score':
+			this.score = [parseInt(lines[2], 10), parseInt(lines[3], 10)];
 			break;
 		}
 		ResourceMonitor.activeIp = null;
